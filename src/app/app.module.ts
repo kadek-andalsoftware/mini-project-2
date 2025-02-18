@@ -4,6 +4,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DxDataGridModule } from 'devextreme-angular';
 import { EmployeeStatusComponent } from './employee-status/employee-status.component';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { GraphQLModule } from './graphql.module';
+import { AuthInterceptor } from './auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -14,8 +17,18 @@ import { EmployeeStatusComponent } from './employee-status/employee-status.compo
     BrowserModule,
     AppRoutingModule,
     DxDataGridModule,
+    GraphQLModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+    provideHttpClient(withInterceptorsFromDi()),
+  ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }
+export class HttpClientModule { }

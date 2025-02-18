@@ -1,8 +1,11 @@
 <dx-data-grid
   id="grid"
-  [dataSource]="employeeStatus"
+  [dataSource]="employeeStatuses"
   [repaintChangesOnly]="true"
   [showBorders]="true"
+  (onRowInserted)="onRowInserted($event)"
+  (onRowUpdated)="onRowUpdated($event)"
+  (onRowRemoved)="onRowRemoved($event)"
 >
   <dxo-scrolling mode="virtual"></dxo-scrolling>
   <dxo-editing
