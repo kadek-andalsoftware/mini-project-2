@@ -15,33 +15,18 @@
     [allowDeleting]="true"
   >
   </dxo-editing>
-  <dxi-column
-    dataField="createdAt"
-    caption="Created At"
-    dataType="date"
-  ></dxi-column>
-  <dxi-column
-    dataField="createdBy"
-    caption="Created By"
-    dataType="string"
-  ></dxi-column>
-  <dxi-column dataField="duration" caption="Duration" dataType=""></dxi-column>
-  <dxi-column
-    dataField="employeeStatusName"
-    caption="Employee Status Name"
-    dataType="string"
-  ></dxi-column>
-  <dxi-column
-    dataField="employeeStatusType"
-    caption="Employee Status Type"
-    dataType="string"
-  ></dxi-column>
-  <dxi-column dataField="id" caption="ID" dataType="string"></dxi-column>
-  <dxi-column
-    dataField="isPKWTCompensation"
-    caption="Is PKWT Compensation"
-    dataType="boolean"
-  >
+  
+  <!-- Kolom read-only -->
+  <dxi-column dataField="createdAt" caption="Created At" dataType="date" [allowEditing]="false"></dxi-column>
+  <dxi-column dataField="createdBy" caption="Created By" dataType="string" [allowEditing]="false"></dxi-column>
+  <dxi-column dataField="updatedAt" caption="Updated At" dataType="date" [allowEditing]="false"></dxi-column>
+  <dxi-column dataField="updatedBy" caption="Updated By" dataType="string" [allowEditing]="false"></dxi-column>
+  
+  <!-- Kolom yang dapat diedit -->
+  <dxi-column dataField="employeeStatusName" caption="Employee Status Name" dataType="string"></dxi-column>
+  <dxi-column dataField="employeeStatusType" caption="Employee Status Type" dataType="string"></dxi-column>
+  <dxi-column dataField="duration" caption="Duration"></dxi-column>
+  <dxi-column dataField="isPKWTCompensation" caption="Is PKWT Compensation" dataType="boolean">
     <dxo-lookup
       [dataSource]="[
         { value: true, text: 'True' },
@@ -49,8 +34,7 @@
       ]"
       displayExpr="text"
       valueExpr="value"
-    >
-    </dxo-lookup>
+    ></dxo-lookup>
   </dxi-column>
   <dxi-column dataField="isProbation" caption="Is Probation" dataType="boolean">
     <dxo-lookup
@@ -60,31 +44,12 @@
       ]"
       displayExpr="text"
       valueExpr="value"
-    >
-    </dxo-lookup>
+    ></dxo-lookup>
   </dxi-column>
-  <dxi-column dataField="isUsed" caption="Is Used" dataType="boolean">
-    <dxo-lookup
-      [dataSource]="[
-        { value: true, text: 'True' },
-        { value: false, text: 'False' }
-      ]"
-      displayExpr="text"
-      valueExpr="value"
-    >
-    </dxo-lookup>
-  </dxi-column>
-  <dxi-column
-    dataField="updatedAt"
-    caption="Updated At"
-    dataType="date"
-  ></dxi-column>
-  <dxi-column
-    dataField="updatedBy"
-    caption="Updated By"
-    dataType="string"
-  ></dxi-column>
+  
+  <dxi-column dataField="id" caption="ID" dataType="string" [allowEditing]="false"></dxi-column>
+  
   <dxi-column type="buttons">
-    <dxi-button name="delete" icon="trash" [hint]="'Delete'"> </dxi-button>
+    <dxi-button name="delete" icon="trash" [hint]="'Delete'"></dxi-button>
   </dxi-column>
 </dx-data-grid>
