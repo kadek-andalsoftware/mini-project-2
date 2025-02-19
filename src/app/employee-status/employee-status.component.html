@@ -1,28 +1,39 @@
 <dx-data-grid
-  id="grid"
+  id="gridContainer"
   [dataSource]="employeeStatuses"
   [repaintChangesOnly]="true"
   [showBorders]="true"
   (onRowInserted)="onRowInserted($event)"
   (onRowUpdated)="onRowUpdated($event)"
-  (onRowRemoved)="onRowRemoved($event)"
+  (onEditorPreparing)="onEditorPreparing($event)"
 >
   <dxo-scrolling mode="virtual"></dxo-scrolling>
   <dxo-editing
-    mode="cell"
+    mode="popup"
     [allowAdding]="true"
-    [allowUpdating]="true"
-    [allowDeleting]="true"
   >
+    <dxo-popup
+      title="Employee Status"
+      [showTitle]="true"
+      [width]="700"
+      [height]="525"
+    >
+    </dxo-popup>
+    <dxo-form>
+      <dxi-item itemType="group" [colCount]="1" [colSpan]="2">
+        <dxi-item dataField="employeeStatusName"></dxi-item>
+        <dxi-item dataField="employeeStatusType"></dxi-item>
+        <dxi-item dataField="duration"></dxi-item>
+        <dxi-item dataField="isPKWTCompensation"></dxi-item>
+      </dxi-item>
+    </dxo-form>
   </dxo-editing>
-  
-  <!-- Kolom read-only -->
+
   <dxi-column dataField="createdAt" caption="Created At" dataType="date" [allowEditing]="false"></dxi-column>
   <dxi-column dataField="createdBy" caption="Created By" dataType="string" [allowEditing]="false"></dxi-column>
   <dxi-column dataField="updatedAt" caption="Updated At" dataType="date" [allowEditing]="false"></dxi-column>
   <dxi-column dataField="updatedBy" caption="Updated By" dataType="string" [allowEditing]="false"></dxi-column>
-  
-  <!-- Kolom yang dapat diedit -->
+
   <dxi-column dataField="employeeStatusName" caption="Employee Status Name" dataType="string"></dxi-column>
   <dxi-column dataField="employeeStatusType" caption="Employee Status Type" dataType="string"></dxi-column>
   <dxi-column dataField="duration" caption="Duration"></dxi-column>
@@ -46,10 +57,13 @@
       valueExpr="value"
     ></dxo-lookup>
   </dxi-column>
-  
   <dxi-column dataField="id" caption="ID" dataType="string" [allowEditing]="false"></dxi-column>
-  
-  <dxi-column type="buttons">
-    <dxi-button name="delete" icon="trash" [hint]="'Delete'"></dxi-button>
-  </dxi-column>
+  <dxi-column caption="Actions" cellTemplate="actionCellTemplate"></dxi-column>
+  <div *dxTemplate="let cell of 'actionCellTemplate'">
+    <dx-button name="delete" icon="trash" [hint]="'Delete'" (onClick)="onRowRemoved(cell.data)"></dx-button>
+  </div>
+  <!-- <dxi-column>
+    <dx-button name="edit" icon="edit" [hint]="'Edit'"></dx-button>
+
+  </dxi-column> -->
 </dx-data-grid>

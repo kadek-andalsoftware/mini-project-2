@@ -4,12 +4,12 @@ import gql from 'graphql-tag';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-export interface EmployeeStatus {
+export class EmployeeStatus {
   id?: string;
-  employeeStatusName: string;
-  employeeStatusType: string;
-  duration: number;
-  isPKWTCompensation: boolean;
+  employeeStatusName?: string;
+  employeeStatusType?: string;
+  duration?: number;
+  isPKWTCompensation?: boolean;
   isProbation?: boolean;
   createdAt?: string;
   createdBy?: string;
@@ -58,7 +58,7 @@ export class EmployeeStatusService {
     return this.apollo.mutate({
       mutation: CREATE_EMPLOYEE_STATUS,
       variables: {
-        employeeStatus: [status]
+        employeeStatus: status
       }
     });
   }
@@ -75,7 +75,7 @@ export class EmployeeStatusService {
     });
   }
 
-  deleteEmployeeStatus(id: string): Observable<any> {
+  deleteEmployeeStatus(id: string): Observable<boolean> {
     const DELETE_EMPLOYEE_STATUS = gql`
       mutation {
         deleteEmployeeStatus(id: "${id}")
@@ -83,6 +83,8 @@ export class EmployeeStatusService {
     `;
     return this.apollo.mutate({
       mutation: DELETE_EMPLOYEE_STATUS
-    });
+    }).pipe(
+      map((response: any) => response.data.deleteEmployeeStatus)
+    );
   }
 }

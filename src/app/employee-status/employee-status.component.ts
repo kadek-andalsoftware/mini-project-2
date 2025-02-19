@@ -16,9 +16,11 @@ import { firstValueFrom } from 'rxjs';
 })
 export class EmployeeStatusComponent implements OnInit {
   employeeStatuses: EmployeeStatus[] = [];
-  selectedStatus: EmployeeStatus = {} as EmployeeStatus;
+  selectedStatus: EmployeeStatus = new EmployeeStatus;
   isEditing = false;
   formVisible = false;
+$event: any;
+
 
   constructor(private employeeStatusService: EmployeeStatusService) {
 
@@ -26,6 +28,33 @@ export class EmployeeStatusComponent implements OnInit {
 
   ngOnInit() {
     this.loadEmployeeStatuses();
+  }
+
+  onEditorPreparing (e: any) {
+    e.editorOptions.onValueChanged = (event: any) => {
+      switch (e.dataField) {
+        case "employeeStatusName":
+          this.selectedStatus.employeeStatusName = event.value;
+          e.setValue(this.selectedStatus.employeeStatusName);
+          console.log(this.selectedStatus);
+          break;
+        case "employeeStatusType":
+          this.selectedStatus.employeeStatusType = event.value;
+          e.setValue(this.selectedStatus.employeeStatusType);
+          console.log(this.selectedStatus);
+          break;
+        case "duration":
+          this.selectedStatus.duration = event.value;
+          e.setValue(this.selectedStatus.duration);
+          console.log(this.selectedStatus);
+          break;
+        case "isPKWTCompensation":
+          this.selectedStatus.isPKWTCompensation = event.value;
+          e.setValue(this.selectedStatus.isPKWTCompensation);
+          console.log(this.selectedStatus);
+          break;
+      }
+    }
   }
 
   async loadEmployeeStatuses() {
@@ -51,24 +80,61 @@ export class EmployeeStatusComponent implements OnInit {
 
   async onRowUpdated(e: any) {
     try {
-      await firstValueFrom(this.employeeStatusService.updateEmployeeStatus(e.data));
-      notify('Employee status updated successfully', 'success', 3000);
-      await this.loadEmployeeStatuses();
+      this.selectedStatus = {...e.data};
     } catch (err) {
       console.error('Error updating employee status:', err);
       notify('Error updating employee status', 'error', 3000);
     }
   }
 
-  async onRowRemoved(e: any) {
-    const id = e.data.id;
+  async onClickUpdate() {
+    console.log("Clicked!!!!");
     try {
-      await firstValueFrom(this.employeeStatusService.deleteEmployeeStatus(id));
-      notify('Employee status deleted successfully', 'success', 3000);
+      await firstValueFrom(this.employeeStatusService.updateEmployeeStatus(this.selectedStatus));
+      notify('Employee status updated successfully', 'success', 3000);
       await this.loadEmployeeStatuses();
+    } catch(err) {
+      console.error('Error updating employee status:', err);
+      notify('Error updating employee status', 'error', 3000);
+    }
+  }
+
+  onUpdateChange(e: any, field: string) {
+    switch (field) {
+      case "employeeStatusName":
+        this.selectedStatus.employeeStatusName = e.value;
+        break;
+      case "employeeStatusType":
+        this.selectedStatus.employeeStatusType = e.value;
+        break;
+      case "duration":
+        this.selectedStatus.duration = e.value;
+        break;
+      case "isPKWTCompensation":
+        this.selectedStatus.isPKWTCompensation = e.value;
+        break;
+    }
+  }
+
+  async onRowRemoved(e: any) {
+    const id = e.id;
+    try {
+      const result = await this.employeeStatusService.deleteEmployeeStatus(id).toPromise();
+      if (result) {
+        notify('Employee status deleted successfully', 'success', 3000);
+        await this.loadEmployeeStatuses();  // Refresh data after deletion
+      } else {
+        notify('Failed to delete employee status', 'error', 3000);
+        console.log("Err: ", );
+      }
     } catch (err) {
+      console.log(this.employeeStatusService.deleteEmployeeStatus(id).toPromise());
       console.error('Error deleting employee status:', err);
       notify('Error deleting employee status', 'error', 3000);
     }
+  }
+
+  onLog() {
+    console.log('Clicked YAY');
   }
 }
