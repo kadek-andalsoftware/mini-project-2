@@ -18,8 +18,10 @@ export class EmployeeStatusComponent implements OnInit {
   employeeStatuses: EmployeeStatus[] = [];
   selectedStatus: EmployeeStatus = new EmployeeStatus;
   isEditing = false;
-  formVisible = false;
-$event: any;
+  visible = false;
+  formData: EmployeeStatus = {};
+  isNewRecord = false;
+  event: any;
 
 
   constructor(private employeeStatusService: EmployeeStatusService) {
@@ -29,6 +31,20 @@ $event: any;
   ngOnInit() {
     this.loadEmployeeStatuses();
   }
+
+  addRow = () => {
+    this.showPopup(true, {});
+  };
+
+  hidePopup = () => { 
+    this.visible = false;
+  };
+
+  showPopup = (isNewRecord: boolean, formData: any) => {
+    this.formData = formData;
+    this.isNewRecord = isNewRecord;
+    this.visible = true;
+  };
 
   onEditorPreparing (e: any) {
     e.editorOptions.onValueChanged = (event: any) => {
