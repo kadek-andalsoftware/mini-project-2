@@ -1,15 +1,11 @@
 <dx-data-grid
   #grid
-  [dataSource]="employeeStatuses"
+  [dataSource]="{store: employeeStatuses}"
   [repaintChangesOnly]="true"
   [showBorders]="true"
   (onEditorPreparing)="onEditorPreparing($event)"
 >
-  <dxo-scrolling mode="virtual"></dxo-scrolling>
-  <dxo-editing
-    mode="popup"
-    [allowAdding]="true">
-  </dxo-editing>
+  <dxo-editing mode="popup"> </dxo-editing>
 
   <dxi-column dataField="createdAt" caption="Created At" dataType="date" [allowEditing]="false"></dxi-column>
   <dxi-column dataField="createdBy" caption="Created By" dataType="string" [allowEditing]="false"></dxi-column>
@@ -18,7 +14,7 @@
 
   <dxi-column dataField="employeeStatusName" caption="Employee Status Name" dataType="string"></dxi-column>
   <dxi-column dataField="employeeStatusType" caption="Employee Status Type" dataType="string"></dxi-column>
-  <dxi-column dataField="duration" caption="Duration"></dxi-column>
+  <dxi-column dataField="duration" caption="Duration" dataType="number"></dxi-column>
   <dxi-column dataField="isPKWTCompensation" caption="Is PKWT Compensation" dataType="boolean">
     <dxo-lookup
       [dataSource]="[
@@ -43,45 +39,53 @@
   <dxi-column caption="Actions" cellTemplate="actionCellTemplate"></dxi-column>
   <div *dxTemplate="let cell of 'actionCellTemplate'">
     <dx-button name="delete" icon="trash" [hint]="'Delete'" style="margin-right: 8px;" (onClick)="onRowRemoved(cell.data)"></dx-button>
-    <dx-button name="edit" icon="edit" [hint]="'Edit'" ></dx-button>
+    <dx-button name="edit" icon="edit" [hint]="'Edit'" (onClick)="addRow()" ></dx-button>
   </div>
   <dxo-toolbar>
     <dxi-item location="after">
-      <div *dxTemplate>
-        <dx-button name="add" icon="plus" hint="Add" (onclick)="addRow()"></dx-button>
+      <div *dxTemplate="let cell of 'actionCellTemplate'">
+        <dx-button name="add" icon="plus" [hint]="'Add'" (onClick)="addRow()"></dx-button>
       </div>
     </dxi-item>
   </dxo-toolbar>
-
-  <dxo-popup
-      *ngIf="visible"
-      title="isNewRecord? 'Add Employee Status' : 'Edit Employee Status'"
-      [showTitle]="true"
-      [hideOnOutsideClick]="true"
-      height="auto"
-      [visible]="true"
-      onHiding="hidePopup">
-      <dxi-toolbar-item
-          widget="dxButton"
-          location="after"
-          toolbar="bottom"
-          [options]="{ 
-            text: 'Confirm', 
-            type: 'success',
-            onClick: onRowInserted ,
-          }">
-      </dxi-toolbar-item>
-      <dxo-form>
-          <dxi-item itemType="group" [colCount]="1" [colSpan]="2">
-          <dxi-item dataField="employeeStatusName"></dxi-item>
-          <dxi-item dataField="employeeStatusType"></dxi-item>
-          <dxi-item dataField="duration"></dxi-item>
-          <dxi-item dataField="isPKWTCompensation"></dxi-item>
-          </dxi-item>
-      </dxo-form>
-  </dxo-popup>
   <!-- <dxi-column>
     <dx-button name="edit" icon="edit" [hint]="'Edit'"></dx-button>
 
   </dxi-column> -->
 </dx-data-grid>
+
+<dxo-popup
+  *ngIf="visible"
+  [title]="isNewRecord ? 'Add' : 'Edit'"
+  [showTitle]="true"
+  [hideOnOutsideClick]="true"
+  height="auto"
+  (onHiding)="hidePopup()">
+  <dxi-toolbar-item
+      widget="dxButton"
+      location="after"
+      toolbar="bottom"
+      [options]="{ 
+          text: 'Confirm', 
+          type: 'success',
+          onClick: onRowInserted ,
+      }"> </dxi-toolbar-item>
+  <dxi-toolbar-item 
+      widget="dxButton"
+      location="after"
+      toolbar="bottom"
+      [options]="{ 
+          text: 'Cancel', 
+          onClick: hidePopup ,
+  }"> </dxi-toolbar-item>
+  <div *dxTemplate="let data of 'content'">
+    <dxo-form [formData]="selectedStatus">
+      <dxi-item itemType="group" [colCount]="1" [colSpan]="2">  
+          <dxi-item dataField="employeeStatusName"></dxi-item>
+          <dxi-item dataField="employeeStatusType"></dxi-item>
+          <dxi-item dataField="duration"></dxi-item>
+          <dxi-item dataField="isPKWTCompensation"></dxi-item>
+      </dxi-item>
+    </dxo-form>
+  </div>
+</dxo-popup>  

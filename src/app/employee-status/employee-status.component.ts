@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import {
   EmployeeStatus,
   EmployeeStatusService,
@@ -7,14 +7,14 @@ import {
 import notify from 'devextreme/ui/notify';
 import { firstValueFrom } from 'rxjs';
 
-
 @Component({
   selector: 'app-employee-status',
   templateUrl: './employee-status.component.html',
   styleUrls: ['./employee-status.component.css'],
   providers: [EmployeeStatusService],
 })
-export class EmployeeStatusComponent implements OnInit {
+
+export class EmployeeStatusComponent {
   employeeStatuses: EmployeeStatus[] = [];
   selectedStatus: EmployeeStatus = new EmployeeStatus;
   isEditing = false;
@@ -23,8 +23,9 @@ export class EmployeeStatusComponent implements OnInit {
   isNewRecord = false;
   event: any;
 
-
-  constructor(private employeeStatusService: EmployeeStatusService) {
+  constructor(
+    private employeeStatusService: EmployeeStatusService,
+  ) {
 
   }
 
@@ -34,7 +35,7 @@ export class EmployeeStatusComponent implements OnInit {
 
   addRow = () => {
     this.showPopup(true, {});
-  };
+  } 
 
   hidePopup = () => { 
     this.visible = false;

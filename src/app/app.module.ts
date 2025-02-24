@@ -3,16 +3,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DxButtonModule, DxDataGridModule} from 'devextreme-angular';
+
 import { EmployeeStatusComponent } from './employee-status/employee-status.component';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { GraphQLModule } from './graphql.module';
 import { AuthInterceptor } from './auth.interceptor';
 import { DxiButtonModule, DxiColumnModule, DxiToolbarItemModule } from 'devextreme-angular/ui/nested';
+import { EmployeeStatusService } from './employee-status/employee-status.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    EmployeeStatusComponent
+    EmployeeStatusComponent,
   ],
   imports: [
     BrowserModule,
@@ -31,6 +33,7 @@ import { DxiButtonModule, DxiColumnModule, DxiToolbarItemModule } from 'devextre
       multi: true
     },
     provideHttpClient(withInterceptorsFromDi()),
+    EmployeeStatusService
   ],
   bootstrap: [AppComponent]
 })
