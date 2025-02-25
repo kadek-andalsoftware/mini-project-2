@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, ViewChild} from '@angular/core';
 import {
   EmployeeStatus,
   EmployeeStatusService,
@@ -6,7 +6,6 @@ import {
 
 import notify from 'devextreme/ui/notify';
 import { firstValueFrom } from 'rxjs';
-
 @Component({
   selector: 'app-employee-status',
   templateUrl: './employee-status.component.html',
@@ -37,14 +36,37 @@ export class EmployeeStatusComponent {
     this.showPopup(true, {});
   } 
 
+  editRow = (e: any) => {
+    const id = e.id;
+    const employeeStatus = this.employeeStatuses.find(status => status.id === id);
+    
+    if (employeeStatus) {
+      this.showPopup(false, employeeStatus);
+    } else {
+      console.log("Employee not found with id:", id);
+    }
+  }
+
   hidePopup = () => { 
     this.visible = false;
   };
 
+  /*
   showPopup = (isNewRecord: boolean, formData: any) => {
     this.formData = formData;
     this.isNewRecord = isNewRecord;
     this.visible = true;
+    console.log(this.formData);
+    console.log("Visible: ", this.visible)
+  };
+  */
+
+  showPopup = (isNewRecord: boolean, data: any) => {
+    this.selectedStatus = isNewRecord ? new EmployeeStatus() : { ...data };
+    this.isNewRecord = isNewRecord;
+    this.visible = true;
+    console.log("Selected Status: ", this.selectedStatus);
+    console.log("Visible: ", this.visible);
   };
 
   onEditorPreparing (e: any) {
@@ -133,6 +155,7 @@ export class EmployeeStatusComponent {
     }
   }
 
+  /*
   async onRowRemoved(e: any) {
     const id = e.id;
     try {
@@ -146,6 +169,28 @@ export class EmployeeStatusComponent {
       }
     } catch (err) {
       console.log(this.employeeStatusService.deleteEmployeeStatus(id).toPromise());
+      console.error('Error deleting employee status:', err);
+      notify('Error deleting employee status', 'error', 3000);
+    }
+  }
+  */
+  
+  onSave() {
+    
+  }
+
+  async onRowRemoved(e: any) {
+    const id = e.id;
+    console.log(id);
+    try {
+      const result = await firstValueFrom(this.employeeStatusService.deleteEmployeeStatus(id));
+      if (result) {
+        notify('Employee status deleted successfully', 'success', 3000);
+        await this.loadEmployeeStatuses();  // Refresh data after deletion
+      } else {
+        notify('Failed to delete employee status', 'error', 3000);
+      }
+    } catch (err) {
       console.error('Error deleting employee status:', err);
       notify('Error deleting employee status', 'error', 3000);
     }
