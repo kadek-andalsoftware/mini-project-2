@@ -1,19 +1,15 @@
 <dx-data-grid
   #grid
-  [dataSource]="{store: employeeStatuses}"
+  [dataSource]="employeeStatuses"
   [repaintChangesOnly]="true"
   [showBorders]="true"
   (onEditorPreparing)="onEditorPreparing($event)"
 >
-  <dxo-editing mode="popup"> 
-    
-  </dxo-editing>
-
+  <dxo-editing mode="popup"></dxo-editing>
   <dxi-column dataField="createdAt" caption="Created At" dataType="date" [allowEditing]="false"></dxi-column>
   <dxi-column dataField="createdBy" caption="Created By" dataType="string" [allowEditing]="false"></dxi-column>
   <dxi-column dataField="updatedAt" caption="Updated At" dataType="date" [allowEditing]="false"></dxi-column>
   <dxi-column dataField="updatedBy" caption="Updated By" dataType="string" [allowEditing]="false"></dxi-column>
-
   <dxi-column dataField="employeeStatusName" caption="Employee Status Name" dataType="string"></dxi-column>
   <dxi-column dataField="employeeStatusType" caption="Employee Status Type" dataType="string"></dxi-column>
   <dxi-column dataField="duration" caption="Duration" dataType="number"></dxi-column>
@@ -50,14 +46,11 @@
       </div>
     </dxi-item>
   </dxo-toolbar>
-  <!-- <dxi-column>
-    <dx-button name="edit" icon="edit" [hint]="'Edit'"></dx-button>
-
-  </dxi-column> -->
 </dx-data-grid>
 
 <dx-popup
-  [visible]="visible"
+  *ngIf="visible"
+  [visible]="true"
   [title]="isNewRecord ? 'Add Employee Status' : 'Edit Employee Status'"
   [showTitle]="true"
   [hideOnOutsideClick]="true"
@@ -65,29 +58,8 @@
   [height]="'auto'"
   [width]="600"
   [dragEnabled]="true"
-  (onHiding)="hidePopup()">
-
-  <dxi-toolbar-item
-    widget="dxButton"
-    location="after"
-    toolbar="bottom"
-    [options]="{ 
-      text: 'Save', 
-      type: 'success',
-      onClick: isNewRecord ? onRowInserted : onRowUpdated
-    }">
-  </dxi-toolbar-item>
-    
-  <dxi-toolbar-item 
-    widget="dxButton"
-    location="after"
-    toolbar="bottom"
-    [options]="{ 
-      text: 'Cancel', 
-      onClick: hidePopup
-    }">
-  </dxi-toolbar-item>
-  
+  (onHiding)="hidePopup()"
+  [showCloseButton]="true">
   <div *dxTemplate="let data of 'content'">
     <dx-form
       id="form"
@@ -95,35 +67,47 @@
       [colCount]="1"
       [showColonAfterLabel]="true"
       [showValidationSummary]="true">
-      
-      <dxi-item dataField="employeeStatusName" [isRequired]="true">
+      <dxi-item dataField="employeeStatusName" title="Employee Status Name" [isRequired]="true">
         <dxi-validation-rule type="required" message="Employee Status Name is required"></dxi-validation-rule>
       </dxi-item>
-      
-      <dxi-item dataField="employeeStatusType" [isRequired]="true">
+      <dxi-item dataField="employeeStatusType" title="Employee Status Type" [isRequired]="true">
         <dxi-validation-rule type="required" message="Employee Status Type is required"></dxi-validation-rule>
       </dxi-item>
-      
-      <dxi-item dataField="duration" [isRequired]="true" editorType="dxNumberBox">
+      <dxi-item dataField="duration" [isRequired]="true" title="Duration" editorType="dxNumberBox">
         <dxi-validation-rule type="required" message="Duration is required"></dxi-validation-rule>
         <dxi-validation-rule type="numeric" message="Value must be numeric"></dxi-validation-rule>
       </dxi-item>
-
-      <dxi-item dataField="isPKWTCompensation" [editorType]="'dxSelectBox'" [editorOptions]="{ 
+      <dxi-item dataField="isPKWTCompensation" title="Is PKWT Compensation?"  [editorType]="'dxSelectBox'" [editorOptions]="{ 
         items: [{text: 'True', value: true}, {text: 'False', value: false}], 
         displayExpr: 'text', 
         valueExpr: 'value' 
       }">
-        <dxi-validation-rule type="required" message="Employee PKWT Compensation is required"></dxi-validation-rule>
       </dxi-item>
-      
-      <dxi-item dataField="isProbation" [editorType]="'dxSelectBox'" [editorOptions]="{ 
+      <dxi-item dataField="isProbation" title="Is Probation?" [editorType]="'dxSelectBox'" [editorOptions]="{ 
         items: [{text: 'True', value: true}, {text: 'False', value: false}], 
         displayExpr: 'text', 
         valueExpr: 'value' 
       }">
-      <dxi-validation-rule type="required" message="Employee Probation Status is required"></dxi-validation-rule>
       </dxi-item>
     </dx-form>
   </div>
+  <dxi-popup-toolbar-item
+      widget="dxButton"
+      location="after"
+      toolbar="bottom"
+      [options]="{ 
+        text: 'Cancel', 
+        onClick: hidePopup
+      }"> 
+  </dxi-popup-toolbar-item>
+  <dxi-popup-toolbar-item
+      widget="dxButton"
+      location="after"
+      toolbar="bottom"
+      [options]="{ 
+        text: 'Save', 
+        type: 'success',
+        onClick: isNewRecord ? onRowInserted : onRowUpdated
+      }"> 
+  </dxi-popup-toolbar-item>
 </dx-popup>

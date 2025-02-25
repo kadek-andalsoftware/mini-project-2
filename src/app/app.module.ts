@@ -8,7 +8,7 @@ import { EmployeeStatusComponent } from './employee-status/employee-status.compo
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { GraphQLModule } from './graphql.module';
 import { AuthInterceptor } from './auth.interceptor';
-import { DxiButtonModule, DxiColumnModule, DxiToolbarItemModule} from 'devextreme-angular/ui/nested';
+import { DxiButtonModule, DxiColumnModule, DxiToolbarItemModule, DxoToolbarModule} from 'devextreme-angular/ui/nested';
 import { EmployeeStatusService } from './employee-status/employee-status.service';
 
 @NgModule({
@@ -27,6 +27,7 @@ import { EmployeeStatusService } from './employee-status/employee-status.service
     DxiToolbarItemModule,
     DxPopupModule,
     DxFormModule,
+    DxoToolbarModule
   ],
   providers: [
     {
